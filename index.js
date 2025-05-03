@@ -17,6 +17,8 @@ let operandTwo = null;
 let operator = "";
 let previousButtonClicked = ""
 let decimalPointPressed = false;
+let negativeIsToggled = false;
+
 
 function add(a, b){
     return +parseFloat(a + b).toFixed(6);
@@ -31,6 +33,10 @@ function divide(a, b){
     return +parseFloat(a / b).toFixed(6);
 }
 
+function percent(a) {
+    return +parseFloat(a / 100).toFixed(6);
+}
+
 function operate(operand1, operand2, operatorChar){
     switch(operatorChar){
         case '+':
@@ -41,6 +47,8 @@ function operate(operand1, operand2, operatorChar){
             return multiply(operand1, operand2);
         case '/':
             return divide(operand1, operand2);
+        case '%':
+            return percent(operand1)
     }
 }
 
@@ -54,6 +62,7 @@ function resetCalculator(){
     display.textContent = "0";
     toggleButton('AC');
     decimalPointPressed = false; 
+    negativeIsToggled = false;
 }
 
 function resetCalculatorUndefined(){
@@ -64,7 +73,8 @@ function resetCalculatorUndefined(){
     operator = "";
     display.textContent = "Undefined";
     toggleButton('AC');
-    decimalPointPressed = false; 
+    decimalPointPressed = false;
+    negativeIsToggled = false;
 }
 
 function toggleButton(symbol){
@@ -131,8 +141,22 @@ function handleClick(event){
         }
         toggleButton(buttonClicked); 
         decimalPointPressed = false; 
+        negativeIsToggled = false;
     }
     
+    else if (buttonClicked === '+/-'){
+        if (currentDisplayText !== "") {
+            if (negativeIsToggled){
+                currentDisplayText = currentDisplayText.slice(1);
+                display.textContent = currentDisplayText;
+                negativeIsToggled = false;
+            } else {
+                currentDisplayText = '-' + currentDisplayText;
+                display.textContent = currentDisplayText;
+                negativeIsToggled = true;
+            }
+        }
+    }
 
     else if (IS_NUMBER(buttonClicked) && currentDisplayText.length < 8){
         if (currentDisplayText === "0" && buttonClicked === "0"){
@@ -153,9 +177,21 @@ function handleClick(event){
             decimalPointPressed = true; 
         }
     }
+
+    else if (buttonClicked === '%'){
+        if (currentDisplayText !== ""){
+            if (!IS_OPERATOR(previousButtonClicked)){
+                currentDisplayText = operate(+currentDisplayText, 0, buttonClicked).toString()
+                console.log(typeof currentDisplayText)
+                display.textContent = currentDisplayText;
+            }
+        }
+    }
+
     else if (IS_OPERATOR(buttonClicked) ){
         if (display.textContent === 'Undefined') return
-        decimalPointPressed = false; 
+        decimalPointPressed = false;
+        negativeIsToggled = false; 
         toggleButton(buttonClicked);
         if (currentDisplayText !== "" && !IS_OPERATOR(previousButtonClicked)){
             if (operator === "") {
