@@ -16,18 +16,19 @@ let operandOne = null;
 let operandTwo = null;
 let operator = "";
 let previousButtonClicked = ""
+let decimalPointPressed = false;
 
 function add(a, b){
-    return a + b;
+    return +parseFloat(a + b).toFixed(6);
 }
 function subtract(a, b){
-    return a - b;
+    return +parseFloat(a - b).toFixed(6);
 }
 function multiply(a, b){
-    return a * b;
+    return +parseFloat(a * b).toFixed(6);
 }
 function divide(a, b){
-    return (a / b);
+    return +parseFloat(a / b).toFixed(6);
 }
 
 function operate(operand1, operand2, operatorChar){
@@ -52,6 +53,7 @@ function resetCalculator(){
     operator = "";
     display.textContent = "0";
     toggleButton('AC');
+    decimalPointPressed = false; 
 }
 
 function resetCalculatorUndefined(){
@@ -62,6 +64,7 @@ function resetCalculatorUndefined(){
     operator = "";
     display.textContent = "Undefined";
     toggleButton('AC');
+    decimalPointPressed = false; 
 }
 
 function toggleButton(symbol){
@@ -127,10 +130,11 @@ function handleClick(event){
             
         }
         toggleButton(buttonClicked); 
+        decimalPointPressed = false; 
     }
     
 
-    else if (IS_NUMBER(buttonClicked) && currentDisplayText.length < 5){
+    else if (IS_NUMBER(buttonClicked) && currentDisplayText.length < 8){
         if (currentDisplayText === "0" && buttonClicked === "0"){
             currentDisplayText = "";
             return
@@ -139,8 +143,19 @@ function handleClick(event){
         display.textContent = currentDisplayText; 
         previousButtonClicked = buttonClicked;
     }
+    else if (buttonClicked === '.'){
+        if (!decimalPointPressed) {
+            if (currentDisplayText === ""){
+                currentDisplayText = '0.'
+            } else {
+                currentDisplayText += '.'
+            }
+            decimalPointPressed = true; 
+        }
+    }
     else if (IS_OPERATOR(buttonClicked) ){
         if (display.textContent === 'Undefined') return
+        decimalPointPressed = false; 
         toggleButton(buttonClicked);
         if (currentDisplayText !== "" && !IS_OPERATOR(previousButtonClicked)){
             if (operator === "") {
