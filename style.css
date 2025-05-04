@@ -52,10 +52,6 @@ body {
     gap: 10px;
 }
 
-.selected {
-    background-color: #9a9a9a;
-}
-
 .row button {
     flex: 1;
     background-color: #fff;
@@ -69,9 +65,6 @@ body {
     justify-content: center;
 }
 
-.row button:hover {
-    background-color: #ddd;
-}
 
 #zero {
     flex: 1;
