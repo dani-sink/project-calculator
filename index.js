@@ -107,6 +107,7 @@ function toggleButton(symbol){
             addButton.style.backgroundColor = "#fff";
             break;
         case 'AC':
+        case 'Enter':
         case '=':
             divisionButton.style.backgroundColor = "#fff";
             subtractButton.style.backgroundColor = "#fff";
@@ -236,8 +237,137 @@ function handleClick(event){
             }
             currentDisplayText = "";
         }
+    }   
+}
+
+
+function handleKeyPress(event){
+    /* 
+        In Firefox, pressing the slash character triggers the
+        default behavior which is to focus a search bar. We
+        use preventDefault() on the event to prevent that 
+        behavior
+    */
+    event.preventDefault();
+    const keyPressed = event.key;
+
+    if (keyPressed === 'r' || keyPressed === 'R') {
+        resetCalculator();
+    }
+
+    if (keyPressed === '=' || keyPressed === 'Enter'){
+        previousButtonClicked = keyPressed;
+        if (operandOne !== null && currentDisplayText !== "") {
+            operandTwo = Number(currentDisplayText);
+            if (operandTwo === 0 && operator === '/'){
+                resetCalculatorUndefined();
+                return;
+            } else {
+                result = operate(operandOne, operandTwo, operator);
+                display.textContent = result;
+                operandOne = null;
+                operandTwo = null;
+                operator = "";
+                currentDisplayText = "";
+            }
+            
+        }
+        toggleButton(keyPressed);
+        decimalPointPressed = false; 
+        negativeIsToggled = false;
+    }
+
+    else if (keyPressed === 'Backspace') {
+        if (currentDisplayText !== '0' && currentDisplayText !== '' && !percentPressed){
+            let len = currentDisplayText.length;
+            if (currentDisplayText[len - 1] === '.'){
+                decimalPointPressed = false;
+            }
+            
+            currentDisplayText = currentDisplayText.slice(0, -1);
+            if (currentDisplayText === "") {
+                display.textContent = "0";
+                negativeIsToggled = false;
+            } else {
+                display.textContent = currentDisplayText;
+            }
+        }
+    }
+
+    else if (keyPressed === 'n' || keyPressed === 'N'){
+        if (currentDisplayText !== "") {
+            if (negativeIsToggled){
+                currentDisplayText = currentDisplayText.slice(1);
+                display.textContent = currentDisplayText;
+                negativeIsToggled = false;
+            } else {
+                currentDisplayText = '-' + currentDisplayText;
+                display.textContent = currentDisplayText;
+                negativeIsToggled = true;
+            }
+        }
+    }
+
+    if (IS_NUMBER(keyPressed) && currentDisplayText.length < 8 ){
+        if (currentDisplayText === "0" && keyPressed === "0"){
+            currentDisplayText = "";
+            return
+        }
+        currentDisplayText += keyPressed;
+        display.textContent = currentDisplayText; 
+        previousButtonClicked = keyPressed;
+    }
+    else if (keyPressed === '.'){
+        if (!decimalPointPressed) {
+            if (currentDisplayText === ""){
+                currentDisplayText = '0.'
+            } else {
+                currentDisplayText += '.'
+            }
+            decimalPointPressed = true; 
+        }
+    }
+
+    else if (keyPressed === '%'){ 
+        if (currentDisplayText !== ""){
+            if (!IS_OPERATOR(previousButtonClicked)){
+                percentPressed = true;
+                currentDisplayText = operate(+currentDisplayText, 0, keyPressed).toString();
+                display.textContent = currentDisplayText;
+            }
+        } 
+    }
+
+    else if (IS_OPERATOR(keyPressed)){ 
+        if (display.textContent === 'Undefined') return
+        decimalPointPressed = false;
+        negativeIsToggled = false; 
+        toggleButton(keyPressed);
+        if (currentDisplayText !== "" && !IS_OPERATOR(previousButtonClicked)){
+            if (operator === "") {
+                operator = keyPressed;
+            }
+            previousButtonClicked = operator;
+            if (operandOne === null) {
+                operandOne = Number(currentDisplayText);
+            } else {
+                if (operandTwo === null){
+                    operandTwo = Number(currentDisplayText);
+                }
+                if (operandTwo === 0 && operator === '/'){
+                    resetCalculatorUndefined();
+                    return;
+                }
+                operandOne = operate(operandOne, operandTwo, operator)
+                display.textContent = operandOne;
+                operandTwo = null;
+                operator = keyPressed;
+            }
+            currentDisplayText = "";
+        }
     }
     
 }
 
 buttonsContainer.addEventListener("click", handleClick)
+document.addEventListener("keydown", handleKeyPress)
