@@ -107,7 +107,6 @@ function toggleButton(symbol){
             addButton.style.backgroundColor = "#fff";
             break;
         case 'AC':
-        case 'Enter':
         case '=':
             divisionButton.style.backgroundColor = "#fff";
             subtractButton.style.backgroundColor = "#fff";
@@ -259,7 +258,7 @@ function handleKeyPress(event){
         resetCalculator();
     }
 
-    if (keyPressed === '=' || keyPressed === 'Enter'){
+    if (keyPressed === '='){
         previousButtonClicked = keyPressed;
         if (operandOne !== null && currentDisplayText !== "") {
             operandTwo = Number(currentDisplayText);
@@ -512,7 +511,6 @@ function colorElement(keyPressed, colorApplied){
         case '.':
             element = document.getElementById('dot');
             break;
-        case 'Enter':
         case '=':
             element = document.getElementById('equal');
             break;
@@ -554,7 +552,6 @@ function onKeyDown(event){
         keyPressed === 'n' ||
         keyPressed === 'N' ||
         keyPressed === '=' ||
-        keyPressed === 'Enter' ||
         keyPressed === '.' ||
         keyPressed === '%'
         
@@ -575,7 +572,6 @@ function onKeyUp(event){
         keyPressed === 'n' ||
         keyPressed === 'N' ||
         keyPressed === '=' ||
-        keyPressed === 'Enter' ||
         keyPressed === '.' ||
         keyPressed === '%'
         
