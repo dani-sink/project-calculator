@@ -17,6 +17,11 @@ A simple and responsive calculator built with **HTML**, **CSS**, and **JavaScrip
 - Responsive layout for desktop and mobile
 - Handles edge cases such as division by zero
 
+## ⌨️ Keyboard Shortcuts
+
+- Press **R** to clear the calculator.
+- Press **N** to toggle the negation of the current number.
+
 ## 🧰 Tech Stack
 
 - **HTML** – Structure of the calculator
