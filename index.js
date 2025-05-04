@@ -248,8 +248,12 @@ function handleKeyPress(event){
         use preventDefault() on the event to prevent that 
         behavior
     */
-    event.preventDefault();
+    
     const keyPressed = event.key;
+    if (keyPressed === '/'){
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
     if (keyPressed === 'r' || keyPressed === 'R') {
         resetCalculator();
@@ -372,7 +376,7 @@ function handleKeyPress(event){
 function onMouseDown(event){
     const target = event.target;
     const buttonClicked = target.textContent;
-    const calculatorKeysPressed = 
+    const calculatorKeysClicked = 
         IS_NUMBER(buttonClicked) ||
         IS_OPERATOR(buttonClicked) ||
         buttonClicked === 'AC' ||
@@ -383,7 +387,7 @@ function onMouseDown(event){
         buttonClicked === '.' ||
         buttonClicked === '%'
         
-    if (calculatorKeysPressed) {
+    if (calculatorKeysClicked) {
         if (target.parentElement.id === 'backspace'){
             target.parentElement.style.backgroundColor = "#9a9a9a";   
         }
@@ -397,7 +401,7 @@ function onMouseDown(event){
 function onMouseUp(event){
     const target = event.target;
     const buttonClicked = target.textContent;
-    const calculatorKeysPressed = 
+    const calculatorKeysClicked = 
         IS_NUMBER(buttonClicked) ||
         IS_OPERATOR(buttonClicked) ||
         buttonClicked === 'AC' ||
@@ -408,7 +412,7 @@ function onMouseUp(event){
         buttonClicked === '.' ||
         buttonClicked === '%'
 
-    if (calculatorKeysPressed) {
+    if (calculatorKeysClicked) {
         if (target.parentElement.id === 'backspace'){
             target.parentElement.style.backgroundColor = "#fff";   
         }
@@ -418,8 +422,6 @@ function onMouseUp(event){
         target.style.backgroundColor = "#fff";
     }
 }
-
-
 
 function onMouseOver(event){
     const target = event.target;
@@ -440,7 +442,7 @@ function onMouseOver(event){
             target.parentElement.style.backgroundColor = "#ddd";   
         }
         if (target.id === 'backspace'){
-            target.firstChild.style.backgroundColor = "#ddd";   
+            document.querySelector("#backspace-img").style.backgroundColor = "#ddd";
         }
         target.style.backgroundColor = "#ddd";
     }
@@ -463,17 +465,132 @@ function onMouseOut(event){
     if (calculatorKeysUnhovered) {
         if (target.parentElement.id === 'backspace'){
             target.parentElement.style.backgroundColor = "#fff";   
-        }
+        } 
         if (target.id === 'backspace'){
-            target.firstChild.style.backgroundColor = "#fff";   
+            document.querySelector("#backspace-img").style.backgroundColor = "#fff";   
         }
         target.style.backgroundColor = "#fff";
     }
 }
 
-buttonsContainer.addEventListener("click", handleClick)
-buttonsContainer.addEventListener('mousedown', onMouseDown)
-buttonsContainer.addEventListener('mouseup', onMouseUp)
-buttonsContainer.addEventListener('mouseover', onMouseOver)
-buttonsContainer.addEventListener('mouseout', onMouseOut)
-document.addEventListener("keydown", handleKeyPress)
+function colorElement(keyPressed, colorApplied){
+    let element = null
+    switch (keyPressed){
+        case '0':
+            element = document.getElementById('zero');
+            break;
+        case '1':
+            element = document.getElementById('one');
+            break;
+        case '2':
+            element = document.getElementById('two');
+            break;
+        case '3':
+            element = document.getElementById('three');
+            break;
+        case '4':
+            element = document.getElementById('four');
+            break;
+        case '5':
+            element = document.getElementById('five');
+            break;
+        case '6':
+            element = document.getElementById('six');
+            break;
+        case '7':
+            element = document.getElementById('seven');
+            break;
+        case '8':
+            element = document.getElementById('eight');
+            break;
+        case '9':
+            element = document.getElementById('nine');
+            break;
+        case 'Backspace':
+            element = document.getElementById('backspace');
+            break;
+        case '.':
+            element = document.getElementById('dot');
+            break;
+        case 'Enter':
+        case '=':
+            element = document.getElementById('equal');
+            break;
+        case '+':
+            element = document.getElementById('plus');
+            break;
+        case '-':
+            element = document.getElementById('minus');
+            break;
+        case '*':
+            element = document.getElementById('asterix');
+            break;
+        case '/':
+            element = document.getElementById('slash');
+            break;
+        case '%':
+            element = document.getElementById('percent');
+            break;
+        case 'n':
+        case 'N':
+            element = document.getElementById('negate');
+            break;
+        case 'r':
+        case 'R':
+            element = document.getElementById('clear');
+            break;
+    }
+    element.style.backgroundColor = colorApplied ? "#9a9a9a" : "#fff";
+}
+
+function onKeyDown(event){
+    const keyPressed = event.key;
+    const calculatorKeysPressed = 
+        IS_NUMBER(keyPressed) ||
+        IS_OPERATOR(keyPressed) ||
+        keyPressed === 'r' ||
+        keyPressed === 'R' ||
+        keyPressed === 'Backspace' || 
+        keyPressed === 'n' ||
+        keyPressed === 'N' ||
+        keyPressed === '=' ||
+        keyPressed === 'Enter' ||
+        keyPressed === '.' ||
+        keyPressed === '%'
+        
+    
+    if (calculatorKeysPressed) {
+        colorElement(keyPressed, true);
+    }
+}
+
+function onKeyUp(event){
+    const keyPressed = event.key;
+    const calculatorKeysPressed = 
+        IS_NUMBER(keyPressed) ||
+        IS_OPERATOR(keyPressed) ||
+        keyPressed === 'r' ||
+        keyPressed === 'R' ||
+        keyPressed === 'Backspace' || 
+        keyPressed === 'n' ||
+        keyPressed === 'N' ||
+        keyPressed === '=' ||
+        keyPressed === 'Enter' ||
+        keyPressed === '.' ||
+        keyPressed === '%'
+        
+    
+    if (calculatorKeysPressed) {
+        colorElement(keyPressed, false);
+    }
+}
+
+
+buttonsContainer.addEventListener("click", handleClick);
+buttonsContainer.addEventListener('mousedown', onMouseDown);
+buttonsContainer.addEventListener('mouseup', onMouseUp);
+buttonsContainer.addEventListener('mouseover', onMouseOver);
+buttonsContainer.addEventListener('mouseout', onMouseOut);
+document.addEventListener("keydown", handleKeyPress);
+document.addEventListener("keydown", onKeyDown); 
+document.addEventListener("keyup", onKeyUp); 
