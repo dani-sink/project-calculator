@@ -18,6 +18,7 @@ let operator = "";
 let previousButtonClicked = ""
 let decimalPointPressed = false;
 let negativeIsToggled = false;
+let percentPressed = false;
 
 
 function add(a, b){
@@ -63,6 +64,7 @@ function resetCalculator(){
     toggleButton('AC');
     decimalPointPressed = false; 
     negativeIsToggled = false;
+    percentPressed = false;
 }
 
 function resetCalculatorUndefined(){
@@ -75,6 +77,7 @@ function resetCalculatorUndefined(){
     toggleButton('AC');
     decimalPointPressed = false;
     negativeIsToggled = false;
+    percentPressed = false;
 }
 
 function toggleButton(symbol){
@@ -143,6 +146,23 @@ function handleClick(event){
         decimalPointPressed = false; 
         negativeIsToggled = false;
     }
+
+    else if (target.id === 'backspace' || target.parentElement.id === 'backspace') {
+        if (currentDisplayText !== '0' && currentDisplayText !== '' && !percentPressed){
+            let len = currentDisplayText.length;
+            if (currentDisplayText[len - 1] === '.'){
+                decimalPointPressed = false;
+            }
+            
+            currentDisplayText = currentDisplayText.slice(0, -1);
+            if (currentDisplayText === "") {
+                display.textContent = "0";
+                negativeIsToggled = false;
+            } else {
+                display.textContent = currentDisplayText;
+            }
+        }
+    }
     
     else if (buttonClicked === '+/-'){
         if (currentDisplayText !== "") {
@@ -158,7 +178,7 @@ function handleClick(event){
         }
     }
 
-    else if (IS_NUMBER(buttonClicked) && currentDisplayText.length < 8){
+    else if (IS_NUMBER(buttonClicked) && currentDisplayText.length < 8 ){
         if (currentDisplayText === "0" && buttonClicked === "0"){
             currentDisplayText = "";
             return
@@ -178,15 +198,16 @@ function handleClick(event){
         }
     }
 
-    else if (buttonClicked === '%'){
+    else if (buttonClicked === '%'){ 
         if (currentDisplayText !== ""){
             if (!IS_OPERATOR(previousButtonClicked)){
-                currentDisplayText = operate(+currentDisplayText, 0, buttonClicked).toString()
-                console.log(typeof currentDisplayText)
+                percentPressed = true;
+                currentDisplayText = operate(+currentDisplayText, 0, buttonClicked).toString();
                 display.textContent = currentDisplayText;
             }
-        }
+        } 
     }
+
 
     else if (IS_OPERATOR(buttonClicked) ){
         if (display.textContent === 'Undefined') return

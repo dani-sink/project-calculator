@@ -63,11 +63,24 @@ body {
     border-radius: 10px;
     font-size: 250%;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .row button:hover {
     background-color: #ddd;
 }
+
 #zero {
-    flex: 2;
+    flex: 1;
 }
+
+#backspace img {
+    width: 42.5%;
+    height: auto;
+}
+
+
+
